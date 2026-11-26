@@ -120,7 +120,7 @@ try {
   await page.locator('#dop-consent').check();
   await page.locator('.admission-form').screenshot({path:join(output,'m7-registration.png')});
   let retryKey, failures=0;
-  await page.route('**/api/dop-enquiry',async r=>{
+  await page.route(/\/api\/dop-enquiry\?new=1$/,async r=>{
     if(r.request().method()==='POST' && !failures++){
       retryKey=r.request().headers()['idempotency-key'];
       const body=r.request().postDataJSON();
@@ -143,7 +143,7 @@ try {
     };
     window.dataLayer=layer;
   });
-  const response=page.waitForResponse(r=>r.url().endsWith('/api/dop-enquiry')&&r.request().method()==='POST');
+  const response=page.waitForResponse(r=>r.url().endsWith('/api/dop-enquiry?new=1')&&r.request().method()==='POST');
   await submit.click();assert.equal((await response).status(),200);
   await page.waitForURL('**/assessment');
   await page.getByText('Question 1 of 9').waitFor();
@@ -190,9 +190,11 @@ try {
   assert.ok(!JSON.stringify(events).includes(phone));
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
   assert.equal((await context.request.patch(api,{headers:{Origin:'https://example.test'},data:{}})).status(),403);
-  await page.unroute('**/api/dop-enquiry');
+  await page.unroute(/\/api\/dop-enquiry\?new=1$/);
   await page.getByRole('link', { name: 'Register another applicant' }).click();
-  await page.waitForURL('**/decoding-of-practice?new=1#form-title');
+  await page.waitForURL('**/decoding-of-practice#form-title');
+  assert.equal(await page.getByRole('link', { name: 'New registration', exact: true }).count(), 0);
+  assert.equal(await page.getByText('After you register, Resume will open').count(), 0);
   const originalResult = (await snapshot()).result;
   assert.ok(originalResult.reference);
   assert.equal((await context.request.post(origin + '/api/dop-enquiry?new=1', {
