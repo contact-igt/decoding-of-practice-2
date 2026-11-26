@@ -30,13 +30,19 @@ function shuffle<T>(items: T[]) {
 }
 
 export type Assigned = { id: string; subject: string; prompt: string; choices: string[]; order: number[]; key: number };
-export function assign(banks: Bank[], fixture = false): Assigned[] {
+export function displayPrompt(prompt: string) {
+  return prompt.replace(/^\s*\d+[.)]\s*/, '');
+}
+
+export function assign(banks: Bank[], fixture = false, collectOnly = false): Assigned[] {
   if (banks.length !== 3 || new Set(banks.map(bank => bank.subject)).size !== 3) throw Error('Three separate banks required');
   const ids = new Set<string>(), prompts = new Set<string>();
   return shuffle(banks.flatMap(bank => {
     const eligible = bank.questions.filter(q => {
-      if (q.review !== (fixture ? 'fixture' : 'faculty-approved') || q.correct === null || !Number.isInteger(q.correct) || q.correct < 0 || q.correct >= q.choices.length || q.choices.length !== 4 || new Set(q.choices).size !== 4) return false;
-      const prompt = q.prompt.replace(/^\s*\d+[.)]\s*/, '').trim().toLowerCase();
+      if (q.review !== (fixture ? 'fixture' : collectOnly ? 'awaiting-owner-key' : 'faculty-approved') ||
+          ![2, 4].includes(q.choices.length) || new Set(q.choices).size !== q.choices.length ||
+          (!collectOnly && (q.correct === null || !Number.isInteger(q.correct) || q.correct < 0 || q.correct >= q.choices.length))) return false;
+      const prompt = displayPrompt(q.prompt).trim().toLowerCase();
       if (ids.has(q.id) || prompts.has(prompt)) throw Error('Duplicate approved question');
       ids.add(q.id); prompts.add(prompt);
       return true;
@@ -45,10 +51,19 @@ export function assign(banks: Bank[], fixture = false): Assigned[] {
     return shuffle(eligible).slice(0, 3).map(q => {
       const indexes = q.choices.map((_, i) => i);
       const order = q.shuffleOptions ? shuffle(indexes) : indexes;
-      return { id: q.id, subject: bank.subject, prompt: q.prompt, choices: order.map(i => q.choices[i]), order, key: order.indexOf(q.correct!) };
+      return { id: q.id, subject: bank.subject, prompt: q.prompt, choices: order.map(i => q.choices[i]), order, key: collectOnly ? -1 : order.indexOf(q.correct!) };
     });
   }));
 }
+
+export function assignForCollection() {
+  const excluded = new Set(['bns-2012210995', 'property-1476177619']);
+  return assign(sourceBanks.map(bank => ({
+    ...bank, questions: bank.questions.filter(question => !excluded.has(question.id)),
+  })), false, true);
+}
+
+export const sourceVersion = source.version;
 export function evaluate(assigned: Assigned[], answers: (number | null)[]) {
   if (assigned.length !== 9 || answers.length !== 9) throw Error('Nine responses required');
   const subjectScores: Record<string, number> = {};

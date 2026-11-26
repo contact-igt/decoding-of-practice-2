@@ -14,7 +14,7 @@ const output = process.env.DOP_TEST_OUTPUT || 'outputs';
 const macChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const executablePath = process.env.CHROME_PATH || (existsSync(macChrome) ? macChrome : undefined);
 const browser = await chromium.launch({ executablePath, headless: true });
-const widths = [320, 375, 390, 430, 768, 1024, 1440, 1920];
+const widths = process.argv.includes('--assessment-only') ? [] : [320, 375, 390, 430, 768, 1024, 1440, 1920];
 mkdirSync(output, { recursive: true });
 
 async function errors(page) {
@@ -79,6 +79,18 @@ try {
   assert.equal(await page.locator('text=₹35,000').count(), 0);
   assert.equal(await page.locator('#experiences').count(), 0);
   assert.equal(await page.locator('#curriculum a[download]').count(), 0);
+  const stories = page.locator('.testimonial-carousel');
+  const firstStory = stories.locator('.testimonial-card').first();
+  const firstCaption = await firstStory.innerText();
+  await stories.getByRole('button', { name: 'Next student testimonial' }).click();
+  assert.notEqual(await firstStory.innerText(), firstCaption);
+  await firstStory.focus();
+  await page.keyboard.press('Enter');
+  const storyDialog = page.getByRole('dialog', { name: 'Student testimonial' });
+  await storyDialog.waitFor();
+  assert.ok(await storyDialog.locator('video').getAttribute('src'));
+  await page.keyboard.press('Escape');
+  await storyDialog.waitFor({ state: 'hidden' });
   await page.goto(route + '?variant=B');
   await page.locator('.mobile-nav summary').focus();
   await page.keyboard.press('Enter');
@@ -103,6 +115,7 @@ try {
   await page.getByLabel('Full name').fill('Fictional Applicant');
   const phone='+1202'+String(Date.now()).slice(-7);
   await page.getByLabel('Mobile number').fill(phone);
+  await page.getByLabel('Email address').fill('applicant@example.com');
   await page.getByLabel('Current professional status').selectOption('Law graduate');
   await page.locator('#dop-consent').check();
   await page.locator('.admission-form').screenshot({path:join(output,'m7-registration.png')});
@@ -143,12 +156,11 @@ try {
   const foreign=await browser.newContext();
   assert.equal((await foreign.request.get(api)).status(),401);
   await foreign.request.put(origin+'/api/dop-enquiry');
-  assert.equal((await foreign.request.post(origin+'/api/dop-enquiry',{headers:{'Idempotency-Key':randomUUID()},data:{fullName:'Fictional Applicant',phone,status:'Law graduate',consent:true}})).status(),409);
+  assert.equal((await foreign.request.post(origin+'/api/dop-enquiry',{headers:{'Idempotency-Key':randomUUID()},data:{fullName:'Fictional Applicant',phone,email:'applicant@example.com',status:'Law graduate',consent:true}})).status(),409);
   await foreign.close();
   for(let i=0;i<9;i++){
-    const q=before.questions[i];
-    const selected=q.prompt.match(/“(.+?)”/)[1];
-    const radio=page.getByRole('radio',{name:selected,exact:true});
+    await page.getByText(`Question ${i + 1} of 9`).waitFor();
+    const radio=page.getByRole('radio').first();
     await radio.check(); await page.waitForFunction(()=>!document.querySelector('.exam-nav .button')?.disabled);
     if(!i) {
       await page.reload(); await page.getByText('Question 1 of 9').waitFor();assert.equal(await radio.isChecked(),true);
@@ -165,13 +177,14 @@ try {
   await page.getByRole('heading',{name:'Review your answers'}).waitFor();
   const rev=(await snapshot()).revision;
   await page.getByRole('button',{name:'Submit assessment'}).click(); await page.waitForURL('**/assessment/result');
-  await page.getByText('Qualified for admissions review').waitFor(); await page.reload(); await page.getByText('Qualified for admissions review').waitFor();
-  assert.equal((await snapshot()).result.score,9);
+  const thankYou = page.getByRole('heading', { name: 'Thank you for completing the assessment' });
+  await thankYou.waitFor(); await page.reload(); await thankYou.waitFor();
+  assert.deepEqual(Object.keys((await snapshot()).result), ['reference']);
   assert.deepEqual(await errors(page),[]);
   await page.screenshot({path:join(output,'m7-result.png'),fullPage:true});
   assert.equal((await (await context.request.post(api,{data:{revision:rev,score:0}})).json()).changed,false);
   const events=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('qaEvents')));
-  for(const e of ['assessment_completed','assessment_qualified']) assert.equal(events.filter(item=>item.event===e).length,1);
+  assert.equal(events.filter(item=>item.event==='assessment_completed').length,1);
   assert.ok(!JSON.stringify(events).includes(phone));
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
   assert.equal((await context.request.patch(api,{headers:{Origin:'https://example.test'},data:{}})).status(),403);

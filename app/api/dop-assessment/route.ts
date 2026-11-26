@@ -1,13 +1,32 @@
 import { NextRequest } from 'next/server';
-import { attempt } from '../../../lib/server/attempt';
+import { acknowledgeSheet, attempt, pendingSheetRegistration, pendingSheetSubmission, Problem } from '../../../lib/server/attempt';
 import { body, failure, gate, json, owner } from '../../../lib/server/http';
+import { saveAssessmentToSheet, saveRegistrationToSheet } from '../../../lib/server/sheet-intake';
 
 export const runtime = 'nodejs';
+function publicView(view: ReturnType<typeof attempt>) {
+  return json({ ...view, result: view.result && { reference: view.result.reference } });
+}
 async function handle(request: NextRequest, action: Parameters<typeof attempt>[1]) {
   try {
     gate(request);
     const data = action === 'finish' || action === 'save' ? await body(request) : {};
-    return json(attempt(owner(request), action, data));
+    const session = owner(request);
+    if (action === 'start') {
+      const registration = pendingSheetRegistration(session);
+      if (registration) {
+        try { await saveRegistrationToSheet(registration.requestId, registration.lead); }
+        catch { throw new Problem(503, 'Your registration is saved. Reload this page to retry confirmation.'); }
+        acknowledgeSheet(session, 'sheetRegistered');
+      }
+    }
+    const view = attempt(session, action, data);
+    const pending = action === 'finish' ? pendingSheetSubmission(session) : null;
+    if (!pending) return publicView(view);
+    try { await saveAssessmentToSheet(pending.requestId, pending.responses); }
+    catch { throw new Problem(503, 'Your answers are saved. Submit again to confirm delivery.'); }
+    const changed = acknowledgeSheet(session, 'sheetDelivered');
+    return publicView({ ...attempt(session, 'read'), changed });
   } catch (error) { return failure(error); }
 }
 export const GET = (r: NextRequest) => handle(r, 'read');

@@ -21,7 +21,7 @@ export function TestimonialCarousel() {
     <section className="testimonial-carousel" role="region" aria-roledescription="carousel" aria-label="student testimonials">
       <button className="testimonial-arrow testimonial-arrow-previous" type="button" onClick={() => move(-1)} aria-label="Previous student testimonial">←</button>
       <div className="testimonial-track">
-        {order.map(index => { const src = testimonialVideos[index]; return <article className="testimonial-card" key={src} role="button" tabIndex={0} onClick={() => show(index)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); show(index); } }} aria-label={`Watch student story ${index + 1}`}>
+        {order.map(index => { const src = testimonialVideos[index]; return <article className="testimonial-card" key={src} role="button" tabIndex={0} onClick={() => show(index)} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); show(index); } }}>
           <video className="testimonial-preview" src={src} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />
           <div className="testimonial-note"><span>{notes[index][0]}</span><p>{notes[index][1]}</p></div>
         </article>; })}

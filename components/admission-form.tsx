@@ -14,6 +14,7 @@ export function AdmissionForm({ variant, demo, sheetRegistration = false }: { va
   const [errors, setErrors] = useState<Errors>({});
   const [busy, setBusy] = useState(false);
   const [serverMessage, setServerMessage] = useState('');
+  const [resumeConflict, setResumeConflict] = useState(false);
   const active = useRef(false);
   const started = useRef(false);
   const sent = useRef<{ payload: string; id: string } | null>(null);
@@ -29,6 +30,7 @@ export function AdmissionForm({ variant, demo, sheetRegistration = false }: { va
     setFields(previous => ({ ...previous, [field]: value }));
     if (field !== 'website') setErrors(previous => ({ ...previous, [field]: undefined }));
     setServerMessage('');
+    setResumeConflict(false);
   }
 
   function showErrors(next: Errors) {
@@ -53,6 +55,7 @@ export function AdmissionForm({ variant, demo, sheetRegistration = false }: { va
     active.current = true;
     setBusy(true);
     setServerMessage('');
+    setResumeConflict(false);
     track('admission_form_submit', { variant });
     try {
       const session = await fetch('/api/dop-enquiry', { method: 'PUT' });
@@ -64,6 +67,7 @@ export function AdmissionForm({ variant, demo, sheetRegistration = false }: { va
       });
       const result = await response.json();
       if (!response.ok || result.accepted !== true) {
+        setResumeConflict(result.code === 'RESUME_ASSESSMENT');
         if (result.errors) showErrors(result.errors);
         else setServerMessage(typeof result.message === 'string' ? result.message : 'We could not confirm receipt. Please try again.');
         if (response.status === 409) sent.current = null;
@@ -123,7 +127,10 @@ export function AdmissionForm({ variant, demo, sheetRegistration = false }: { va
     </fieldset>
     {!sheetRegistration && <a className="text-link" href={route + '/assessment'}>Resume a saved assessment</a>}
     <div className="form-trap" aria-hidden="true"><label htmlFor="dop-website">Leave this field blank</label><input id="dop-website" name="website" tabIndex={-1} autoComplete="off" value={fields.website} onChange={event => change('website', event.target.value)} /></div>
-    {serverMessage && <p className="form-message" role="alert">{serverMessage}</p>}
+    {serverMessage && <div className="form-message" role="alert">
+      {serverMessage}
+      {resumeConflict && <div><a className="text-link" href={route + '/assessment'}>Open saved registration</a></div>}
+    </div>}
     <div className="form-actions">
       <button className="button" type="submit" disabled={busy}>{busy ? 'Registering…' : 'Register & Start Assessment'}</button>
     </div>
