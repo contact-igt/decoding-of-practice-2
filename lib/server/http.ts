@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { object } from '../enquiry';
 import { leadConfig } from '../receipt';
 import { Problem } from './attempt';
+import { sheetAssessmentEnabled } from './assessment-config';
 
 const limit = 8192;
 const recent = new Map<string, { count: number; until: number }>();
@@ -42,9 +43,6 @@ export function gate(request: NextRequest, registration = false) {
   const record = recent.get(bucket) ?? { count: 0, until: now + 60000 };
   recent.set(bucket, record);
   if (++record.count > (bucket.endsWith(':register') ? 100 : 1200)) throw new Problem(429, 'Please wait a minute and retry.');
-}
-export function sheetAssessmentEnabled() {
-  return process.env.DOP_UNSCORED_ASSESSMENT === '1' && Boolean(process.env.DOP_ASSESSMENT_STORE && process.env.DOP_GOOGLE_SHEETS_URL);
 }
 export const sessionName = 'dop_attempt_session';
 export function owner(request: NextRequest) {

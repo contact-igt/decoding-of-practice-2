@@ -8,6 +8,7 @@ import { AdmissionForm } from '../../components/admission-form';
 import { Tracking } from '../../components/tracking';
 import { Footer, Header } from '../../components/site';
 import { academy, campaign, caseSteps, course, curriculum, description, faqs, route, title } from '../../lib/course';
+import { sheetAssessmentEnabled } from '../../lib/server/assessment-config';
 import { indexable, publicSite } from '../../lib/site-url';
 
 export const metadata: Metadata = {
@@ -210,7 +211,7 @@ export default async function DOP({ searchParams }: { searchParams: Promise<{ va
             <div className="hero-actions"><a className="button" href="#form-title" data-track="assessment_cta_click" data-placement="investment">Take the Admission Assessment</a>
               <a className="text-link" href={academy.phoneHref} data-track="phone_click">Call for assessment help</a></div>
           </div>
-          <AdmissionForm variant={id} sheetRegistration={Boolean(process.env.DOP_GOOGLE_SHEETS_URL && !(process.env.DOP_UNSCORED_ASSESSMENT === '1' && process.env.DOP_ASSESSMENT_STORE))} demo={!process.env.DOP_GOOGLE_SHEETS_URL && process.env.DOP_LOCAL_TEST === '1' && process.env.DOP_ALLOW_INDEXING !== 'true'} />
+          <AdmissionForm variant={id} sheetRegistration={Boolean(process.env.DOP_GOOGLE_SHEETS_URL && !sheetAssessmentEnabled())} demo={!process.env.DOP_GOOGLE_SHEETS_URL && process.env.DOP_LOCAL_TEST === '1' && process.env.DOP_ALLOW_INDEXING !== 'true'} />
         </div>
       </section>
 
