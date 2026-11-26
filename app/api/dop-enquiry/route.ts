@@ -2,8 +2,8 @@ import { randomBytes } from 'node:crypto';
 import { NextRequest } from 'next/server';
 import { campaign } from '../../../lib/course';
 import { validateLead } from '../../../lib/enquiry';
-import { lifetime, register } from '../../../lib/server/attempt';
-import { body, failure, gate, json, owner, sessionName } from '../../../lib/server/http';
+import { acknowledgeSheet, lifetime, register } from '../../../lib/server/attempt';
+import { body, failure, gate, json, owner, sessionName, sheetAssessmentEnabled } from '../../../lib/server/http';
 import { saveRegistrationToSheet } from '../../../lib/server/sheet-intake';
 import { receiptCookie, receiptSeconds, signReceipt } from '../../../lib/receipt';
 
@@ -29,7 +29,14 @@ export async function POST(request: NextRequest) {
     const { lead, errors } = validateLead(input, variant);
     if (Object.keys(errors).length) return json({ errors }, 422);
     if (process.env.DOP_GOOGLE_SHEETS_URL) {
-      owner(request);
+      const session = owner(request);
+      if (sheetAssessmentEnabled()) {
+        const { registration } = register(session, key, lead, 'sheet');
+        if (!registration) throw new Error('Assessment registration is unavailable.');
+        const saved = await saveRegistrationToSheet(registration.requestId, registration.lead);
+        acknowledgeSheet(session, 'sheetRegistered');
+        return json({ accepted: true, created: saved.created, mode: 'webhook' });
+      }
       const saved = await saveRegistrationToSheet(key, lead);
       const response = json({ accepted: true, created: saved.created, mode: 'webhook', next: 'confirmation' });
       response.cookies.set(receiptCookie, signReceipt(key, 'webhook', process.env.DOP_GOOGLE_SHEETS_TOKEN!), {
@@ -37,7 +44,7 @@ export async function POST(request: NextRequest) {
       });
       return response;
     }
-    const receipt = register(owner(request), key, lead);
-    return json({ accepted: true, ...receipt, mode: 'local' });
+    const receipt = register(owner(request), key, lead, 'local');
+    return json({ accepted: true, created: receipt.created, mode: 'local' });
   } catch (error) { return failure(error); }
 }

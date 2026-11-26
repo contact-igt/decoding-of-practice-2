@@ -70,3 +70,4 @@ The standalone implementation uses Next.js 16.4.5 App Router, strict TypeScript,
 | M4 Analytics and SEO | PASS locally; provider activation BLOCKED | [Tracking and search audit](audit/M4.md) |
 | M5 Responsive QA | Browser and accessibility PASS; mobile LCP target FAIL | [Browser report](audit/M5.md) |
 | M6 Release readiness | BLOCKED | [Release audit](audit/M6.md) |
+| M7 Admission assessment | Unscored collection implemented locally. Live activation and scoring pending. | [Question bank and Sheet delivery](audit/M7-question-bank.md) |

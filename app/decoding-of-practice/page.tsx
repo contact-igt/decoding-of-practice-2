@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { AcademyVideo } from '../../components/academy-video';
+import { TrainingGallery } from '../../components/training-gallery';
 import { TestimonialCarousel } from '../../components/testimonial-carousel';
 import { VideoCarousel } from '../../components/video-carousel';
 import { AdmissionForm } from '../../components/admission-form';
@@ -69,7 +70,7 @@ export default async function DOP({ searchParams }: { searchParams: Promise<{ va
               <a className="button" href="#admission" data-track="assessment_cta_click" data-placement="hero">Take the Admission Assessment</a>
               <a className="text-link" href="#curriculum" data-track="hero_cta_click" data-placement="curriculum">Explore the Curriculum</a>
             </div>
-            <p className="assessment-meta">9 questions • Approximately 5 minutes • Performance-based fee concession</p>
+            <p className="assessment-meta">9 questions • Approximately 5 minutes</p>
           </div>
           <figure className="hero-photo">
             <picture><source media="(max-width: 720px)" srcSet="/vls/hero-mobile.webp"/><Image src={course.photos.hero} alt="An instructor teaching a group at VLS Law Academy" width={1680} height={945}
@@ -84,9 +85,11 @@ export default async function DOP({ searchParams }: { searchParams: Promise<{ va
         </div>
       </section>
 
+      <TrainingGallery rows={course.photos.gallery} />
+
       <section className="section section-soft how-admission" aria-labelledby="how-title"><div className="shell editorial-grid">
-        <div><p className="eyebrow"><span/>Admissions</p><h2 id="how-title">How Admission Works</h2><p className="section-lead">Complete our nine-question online assessment for an opportunity to qualify for a course fee concession based on your performance.</p></div>
-        <ol>{['Register your details.', 'Complete the online assessment.', 'Qualify for a potential course fee concession.', 'Receive admission guidance from the VLS team.'].map((line,i) => <li key={line}><span>0{i+1}</span>{line}</li>)}</ol>
+        <div><p className="eyebrow"><span/>Admissions</p><h2 id="how-title">How Admission Works</h2><p className="section-lead">Register and complete the nine-question online assessment.</p></div>
+        <ol>{['Register your details.', 'Complete the online assessment.', 'Receive admission guidance from the VLS team.'].map((line,i) => <li key={line}><span>0{i+1}</span>{line}</li>)}</ol>
       </div></section>
       <section className="section first-case" aria-labelledby="first-case">
         <div className="shell editorial-grid">
@@ -105,7 +108,6 @@ export default async function DOP({ searchParams }: { searchParams: Promise<{ va
             <div><p className="eyebrow"><span />The programme</p><h2>The Bridge Between Legal Education and Legal Practice.</h2></div>
             <p className="section-lead">Decoding of Practice brings together case discussions, drafting exercises and practitioner guidance. Follow a matter from the first client meeting to preparation for a hearing.</p>
           </div>
-          <div className="photo-strip">{[["academy-1","A VLS instructor presenting in class"],["academy-2","Participants working through a classroom exercise"],["academy-3","A VLS faculty member explaining a topic on screen"]].map(([photo,alt]) => <Image key={photo} src={"/vls/"+photo+".webp"} width={600} height={380} alt={alt} sizes="(max-width:720px) 32vw, 30vw"/>)}</div>
           <dl className="pillars">{pillars.map(([label, copy], i) => <div key={label}><span aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><dt>{label}</dt><dd>{copy}</dd></div>)}</dl>
         </div>
       </section>
@@ -201,14 +203,14 @@ export default async function DOP({ searchParams }: { searchParams: Promise<{ va
       <section className="section admission" id="admission">
         <div className="shell admission-grid">
           <div className="admission-copy"><p className="eyebrow"><span />Admission assessment</p><h2>Start your application.</h2>
-            <p className="section-lead">Register before beginning the nine questions. Clear the assessment to proceed to admissions review. VLS will confirm the applicable concession and final fee.</p>
+            <p className="section-lead">Register before beginning the nine questions. VLS will contact you about admissions after you submit your answers.</p>
             <dl className="admission-facts"><div><dt>Programme</dt><dd>{course.name}</dd></div><div><dt>Commitment</dt><dd>{course.duration}, {course.hours} hours</dd></div>
               {([['Next batch', course.batch], ['Programme fee', course.fee], ['Format', course.format], ['Schedule', course.schedule], ['Payment options', course.paymentOptions]] as const).map(([label, value]) => value && <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
             </dl>
             <div className="hero-actions"><a className="button" href="#form-title" data-track="assessment_cta_click" data-placement="investment">Take the Admission Assessment</a>
               <a className="text-link" href={academy.phoneHref} data-track="phone_click">Call for assessment help</a></div>
           </div>
-          <AdmissionForm variant={id} sheetRegistration={Boolean(process.env.DOP_GOOGLE_SHEETS_URL)} demo={!process.env.DOP_GOOGLE_SHEETS_URL && process.env.DOP_LOCAL_TEST === '1' && process.env.DOP_ALLOW_INDEXING !== 'true'} />
+          <AdmissionForm variant={id} sheetRegistration={Boolean(process.env.DOP_GOOGLE_SHEETS_URL && !(process.env.DOP_UNSCORED_ASSESSMENT === '1' && process.env.DOP_ASSESSMENT_STORE))} demo={!process.env.DOP_GOOGLE_SHEETS_URL && process.env.DOP_LOCAL_TEST === '1' && process.env.DOP_ALLOW_INDEXING !== 'true'} />
         </div>
       </section>
 

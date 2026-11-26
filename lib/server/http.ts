@@ -30,7 +30,7 @@ export async function boundedJson(request: Request) {
 
 export function gate(request: NextRequest, registration = false) {
   const host = request.headers.get('host') ?? '';
-  const sheet = registration && Boolean(process.env.DOP_GOOGLE_SHEETS_URL && (process.env.DOP_GOOGLE_SHEETS_TOKEN?.length ?? 0) >= 32);
+  const sheet = (registration || sheetAssessmentEnabled()) && Boolean(process.env.DOP_GOOGLE_SHEETS_URL && (process.env.DOP_GOOGLE_SHEETS_TOKEN?.length ?? 0) >= 32);
   if (!sheet && (!/^(?:localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host) || leadConfig(new URL('http://' + host).hostname)?.mode !== 'local'))
     throw new Problem(503, 'Online assessment registration is awaiting approval. Contact VLS for assistance.');
   const origin = request.headers.get('origin');
@@ -42,6 +42,9 @@ export function gate(request: NextRequest, registration = false) {
   const record = recent.get(bucket) ?? { count: 0, until: now + 60000 };
   recent.set(bucket, record);
   if (++record.count > (bucket.endsWith(':register') ? 100 : 1200)) throw new Problem(429, 'Please wait a minute and retry.');
+}
+export function sheetAssessmentEnabled() {
+  return process.env.DOP_UNSCORED_ASSESSMENT === '1' && Boolean(process.env.DOP_ASSESSMENT_STORE && process.env.DOP_GOOGLE_SHEETS_URL);
 }
 export const sessionName = 'dop_attempt_session';
 export function owner(request: NextRequest) {
@@ -58,5 +61,5 @@ export async function body(request: NextRequest) {
   catch (error) { throw new Problem(error instanceof RangeError ? 413 : 400, 'The request could not be read.'); }
 }
 export function failure(error: unknown) {
-  return error instanceof Problem ? json({ message: error.message }, error.status) : json({ message: 'We could not confirm your changes. Please retry.' }, 503);
+  return error instanceof Problem ? json({ message: error.message, code: error.code }, error.status) : json({ message: 'We could not confirm your changes. Please retry.' }, 503);
 }

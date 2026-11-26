@@ -2,6 +2,9 @@
 // Script Properties: SPREADSHEET_ID, INTAKE_TOKEN (random secret, 32+ characters).
 const HEADERS = ['Request ID', 'Received at', 'Full name', 'Mobile number', 'Email address', 'Professional status', 'Contact consent', 'Marketing consent', 'Variant', 'Payload hash', 'Primary learning objective', 'Intended joining timeline', 'Question', 'First attribution', 'Latest attribution'];
 
+const ASSESSMENT_HEADERS = Array.from({ length: 9 }, (_, index) => 'Question ' + (index + 1));
+const ALL_HEADERS = HEADERS.concat(ASSESSMENT_HEADERS);
+
 function setup() {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
@@ -11,9 +14,11 @@ function setup() {
   const sheet = book.getSheetByName('Registrations') || book.insertSheet('Registrations');
   if (sheet.getLastRow()) {
     const existing = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    if (existing.some((header, index) => header !== HEADERS[index])) throw new Error('Unexpected sheet headers. Keep the existing column order.');
+    if (existing.some((header, index) => header !== ALL_HEADERS[index])) throw new Error('Unexpected sheet headers. Keep the existing column order.');
   }
-  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  const columns = sheet.getMaxColumns();
+  if (columns < ALL_HEADERS.length) sheet.insertColumnsAfter(columns, ALL_HEADERS.length - columns);
+  sheet.getRange(1, 1, 1, ALL_HEADERS.length).setValues([ALL_HEADERS]);
   sheet.setFrozenRows(1);
   SpreadsheetApp.flush();
   } finally { lock.releaseLock(); }
@@ -21,6 +26,27 @@ function setup() {
 
 function reply(data) {
   return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// Called under the same script lock as registration.
+function saveAssessment(sheet, input) {
+  if (!sheet || sheet.getRange(1, 1, 1, ALL_HEADERS.length).getValues()[0].some((value, i) => value !== ALL_HEADERS[i])) {
+    return reply({accepted: false, code: 'RUN_SETUP'});
+  }
+  const rows = sheet.getLastRow();
+  const registration = rows > 1 && sheet.getRange(2, 1, rows - 1, 1).createTextFinder(input.requestId).matchEntireCell(true).findNext();
+  if (!registration) return reply({accepted: false, code: 'REGISTRATION_REQUIRED'});
+  const values = input.responses.map(item => 'Question: ' + item.question + '\nSelected answer: ' + item.answer);
+  const range = sheet.getRange(registration.getRow(), HEADERS.length + 1, 1, ASSESSMENT_HEADERS.length);
+  const existing = range.getValues()[0];
+  if (existing.some(value => value !== '')) {
+    return existing.every((value, index) => value === values[index])
+      ? reply({accepted: true, requestId: input.requestId, duplicate: true})
+      : reply({accepted: false, code: 'IDEMPOTENCY_CONFLICT'});
+  }
+  range.setValues([values]).setWrap(true);
+  SpreadsheetApp.flush();
+  return reply({accepted: true, requestId: input.requestId, duplicate: false});
 }
 
 function doPost(e) {
@@ -32,7 +58,19 @@ function doPost(e) {
     if (!secret || secret.length < 32) return reply({accepted: false, code: 'NOT_CONFIGURED'});
     if (!e || !e.postData || e.postData.contents.length > 16384) return reply({accepted: false, code: 'INVALID_REQUEST'});
     const input = JSON.parse(e.postData.contents);
-    if (input.token !== secret) return reply({accepted: false, code: 'UNAUTHORIZED'});
+    if (input?.token !== secret) return reply({accepted: false, code: 'UNAUTHORIZED'});
+    const validId = typeof input.requestId === 'string' && /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(input.requestId);
+    if (input.action === 'assessment') {
+      const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
+      if (!validId || !Array.isArray(input.responses) || input.responses.length !== 9 ||
+          !input.responses.every(item => text(item?.question, 1500) && text(item?.answer, 500))) {
+        return reply({accepted: false, code: 'VALIDATION_FAILED'});
+      }
+      lock.waitLock(10000);
+      locked = true;
+      const sheet = SpreadsheetApp.openById(p.getProperty('SPREADSHEET_ID')).getSheetByName('Registrations');
+      return saveAssessment(sheet, input);
+    }
     const lead = input.lead || {};
     const name = String(lead.fullName || '').trim();
     const phone = String(lead.phone || '').trim();

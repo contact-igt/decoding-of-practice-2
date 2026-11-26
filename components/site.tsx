@@ -9,12 +9,13 @@ const links = [
   ['FAQs', 'faqs'],
 ];
 
-export function Header() {
+export function Header({ assessment = false }: { assessment?: boolean }) {
   return <header className="site-header">
-    <div className="shell header-inner">
+    <div className={assessment ? 'shell header-inner header-inner-logo-only' : 'shell header-inner'}>
       <a className="brand" href={route}>
-        <Image src={course.photos.logo} alt="" width={62} height={62} />
+        <Image src={course.photos.logo} alt="VLS Law Academy" width={62} height={62} />
       </a>
+      {!assessment && <>
       <nav className="desktop-nav" aria-label="Programme navigation">
         {links.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}
       </nav>
@@ -26,6 +27,7 @@ export function Header() {
           <a href="#admission" data-track="assessment_cta_click" data-placement="menu">Take the Admission Assessment</a>
         </nav>
       </details>
+      </>}
     </div>
   </header>;
 }

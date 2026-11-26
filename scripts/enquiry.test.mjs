@@ -14,7 +14,7 @@ test('normalises Indian mobiles and explicitly formatted international numbers',
 });
 
 test('validates consent, form choice allowlists and safe campaign variants', () => {
-  const fields = { fullName: 'Ada Example', phone: '9876543210', email: '', status: 'Law graduate', objective: 'Improve drafting', timeline: 'Within three months', consent: true };
+  const fields = { fullName: 'Ada Example', phone: '9876543210', email: 'ada@example.com', status: 'Law graduate', objective: 'Improve drafting', timeline: 'Within three months', consent: true };
   assert.deepEqual(validateLead(fields, 'B').errors, {});
   assert.deepEqual(Object.keys(validateLead({ ...fields, status: 'Unknown', consent: 'true' }).errors), ['status', 'consent']);
   assert.equal(campaign('B').id, 'B');

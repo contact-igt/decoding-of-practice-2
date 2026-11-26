@@ -17,7 +17,7 @@ type Course = {
   ai: boolean;
   testimonials: ReadonlyArray<{ name: string; role: string; quote: string; video?: string; poster?: string }>;
   mentor: { name: string; credentials: string; role: string; photo: string; video: string | null; currentProgrammeApproved: boolean };
-  photos: { logo: string; hero: string; classroom: string };
+  photos: { logo: string; hero: string; classroom: string; gallery: ReadonlyArray<ReadonlyArray<{ src: string; alt: string }>> };
 };
 
 export const course: Course = {
@@ -39,7 +39,21 @@ export const course: Course = {
     role: 'Lawyer, Chennai High Court', photo: '/vls/mentor.webp',
     video: null, currentProgrammeApproved: false,
   },
-  photos: { logo: '/vls/logo.png', hero: '/vls/hero.webp', classroom: '/vls/classroom.webp' },
+  photos: {
+    logo: '/vls/logo.png', hero: '/vls/hero.webp', classroom: '/vls/classroom.webp',
+    gallery: [
+      [
+        { src: '/vls/academy-1.webp', alt: 'A VLS instructor presenting in class' },
+        { src: '/vls/academy-2.webp', alt: 'Participants working through a classroom exercise' },
+        { src: '/vls/academy-3.webp', alt: 'A VLS faculty member explaining a topic on screen' },
+      ],
+      [
+        { src: '/vls/classroom.webp', alt: 'Participants taking notes during a VLS Law Academy class' },
+        { src: '/vls/academy-5.webp', alt: 'Learners facing the instructor in a VLS classroom' },
+        { src: '/vls/hero.webp', alt: 'An instructor teaching a group at VLS Law Academy' },
+      ],
+    ],
+  },
 };
 
 export const academy = {
@@ -121,11 +135,9 @@ export const faqs = [
   ['What is the fee?', course.fee ?? 'Speak with our admission team for programme fees and upcoming batch details.'],
   ['Are instalments available?', course.paymentOptions ?? 'Ask the admissions team which payment options apply to the upcoming batch.'],
   ['Is certification provided?', course.certificate ?? 'The admissions team can confirm the current certification policy.'],
-  ['Is the assessment compulsory?', 'Yes. Every applicant must register, complete and clear the assessment before final admission.'],
+  ['Is the assessment compulsory?', 'Applicants register and complete the assessment as part of the admissions process.'],
   ['How many questions are included?', 'Nine multiple-choice questions, with three drawn from each subject bank.'],
   ['How long does it take?', 'Allow approximately five minutes. You can resume in the same browser while your session is active.'],
-  ['How are course fee concessions determined?', 'Your performance may qualify you for a concession. The VLS admissions team reviews the applicable concession and confirms the final course fee.'],
-  ['What happens after I qualify?', 'VLS reviews your application and contacts you about the concession, fee and next steps for admission.'],
-  ['What happens if I do not clear the assessment?', 'The team can guide you on preparation and available retake options. Qualification is required for admission.'],
+  ['What happens after I submit my answers?', 'You’ll see a confirmation. The VLS admissions team will contact you about next steps.'],
   ['Who will contact me about admission?', 'The VLS admissions team will use the contact details you provide at registration.'],
 ] as const;
