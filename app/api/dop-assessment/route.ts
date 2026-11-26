@@ -11,6 +11,9 @@ async function handle(request: NextRequest, action: Parameters<typeof attempt>[1
   try {
     gate(request);
     const data = action === 'finish' || action === 'save' ? await body(request) : {};
+    if ((action === 'finish' || action === 'save') && typeof data.attemptId !== 'string') {
+      throw new Problem(409, 'Reload to open the current assessment.');
+    }
     const session = owner(request);
     if (action === 'start') {
       const registration = await pendingSheetRegistration(session);

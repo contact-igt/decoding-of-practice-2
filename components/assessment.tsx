@@ -4,7 +4,7 @@ import { academy, route } from '../lib/course';
 import { track } from '../lib/analytics';
 import { Tracking } from './tracking';
 
-type View = { step: number; revision: number; changed: boolean; variant: string; answers: (number | null)[];
+type View = { attemptId: string; step: number; revision: number; changed: boolean; variant: string; answers: (number | null)[];
   mode: 'local' | 'webhook'; pendingDelivery: boolean;
   questions: { subject: string; prompt: string; choices: string[] }[]; result: { reference: string } | null };
 const path = route + '/assessment';
@@ -33,7 +33,7 @@ export function Assessment({ resultPage = false }: { resultPage?: boolean }) {
     lock.current = true; setBusy(true); setError('');
     if (choice !== null) setView({ ...v, answers: v.answers.map((answer, i) => i === v.step ? choice : answer) });
     try {
-      const view = await request(finish ? 'POST' : 'PATCH', { revision: v.revision, index: v.step, choice, step });
+      const view = await request(finish ? 'POST' : 'PATCH', { attemptId: v.attemptId, revision: v.revision, index: v.step, choice, step });
       if (finish && view.result) {
         if (view.changed) {
           track('assessment_completed', { variant: view.variant, mode: view.mode });
@@ -72,6 +72,8 @@ export function Assessment({ resultPage = false }: { resultPage?: boolean }) {
         <p>Your answers have been received. The VLS admissions team will contact you about next steps.</p>
         <p>Application reference <strong>{result.reference}</strong></p>
         <a className="button" href={academy.whatsapp} data-track="admission_whatsapp_click">Speak to the Admission Team</a>
+        <p>Keep your application reference. Starting a new registration switches this browser to the next applicant.</p>
+        <a className="text-link" href={route + '?new=1#form-title'}>Register another applicant</a>
       </> : q && v ? <>
         <div className="exam-progress"><span>Question {v.step + 1} of 9</span><span>{q.subject}</span></div>
         <progress aria-label="Assessment progress" value={v.step + 1} max={9}/>

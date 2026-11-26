@@ -8,7 +8,8 @@ import { objectives, statuses, timelines, validateLead, type Errors } from '../l
 const initial = { fullName: '', phone: '', email: '', status: '', objective: '', timeline: '', consent: false, marketingConsent: false, question: '', website: '' };
 type Field = keyof typeof initial;
 
-export function AdmissionForm({ variant, demo, sheetRegistration = false }: { variant: string; demo: boolean; sheetRegistration?: boolean }) {
+export function AdmissionForm({ variant, demo, sheetRegistration = false, newRegistration = false }: { variant: string; demo: boolean; sheetRegistration?: boolean; newRegistration?: boolean }) {
+  const endpoint = '/api/dop-enquiry' + (newRegistration ? '?new=1' : '');
   const [fields, setFields] = useState(initial);
 
   const [errors, setErrors] = useState<Errors>({});
@@ -58,9 +59,9 @@ export function AdmissionForm({ variant, demo, sheetRegistration = false }: { va
     setResumeConflict(false);
     track('admission_form_submit', { variant });
     try {
-      const session = await fetch('/api/dop-enquiry', { method: 'PUT' });
+      const session = await fetch(endpoint, { method: 'PUT' });
       if (!session.ok) { setServerMessage((await session.json()).message); return; }
-      const response = await fetch('/api/dop-enquiry', {
+      const response = await fetch(endpoint, {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': id },
         body: JSON.stringify({ ...fields, attribution: tracking, variant }),
         signal: AbortSignal.timeout(20000),
@@ -125,7 +126,9 @@ export function AdmissionForm({ variant, demo, sheetRegistration = false }: { va
       </div>
       <div className="field consent-field"><label><input type="checkbox" checked={fields.marketingConsent} onChange={e => change('marketingConsent', e.target.checked)} />Send me optional VLS programme promotions.</label></div>
     </fieldset>
-    {!sheetRegistration && <a className="text-link" href={route + '/assessment'}>Resume a saved assessment</a>}
+    {!sheetRegistration && <><a className="text-link" href={route + '/assessment'}>Resume a saved assessment</a>
+      {newRegistration ? <p>After you register, Resume will open the new applicant’s assessment.</p> : <p><a className="text-link" href={route + '?new=1&variant=' + variant + '#form-title'}>New registration</a></p>}
+    </>}
     <div className="form-trap" aria-hidden="true"><label htmlFor="dop-website">Leave this field blank</label><input id="dop-website" name="website" tabIndex={-1} autoComplete="off" value={fields.website} onChange={event => change('website', event.target.value)} /></div>
     {serverMessage && <div className="form-message" role="alert">
       {serverMessage}

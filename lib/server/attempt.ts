@@ -79,6 +79,9 @@ export async function attempt(owner: string, action: 'read' | 'start' | 'save' |
   const saved = await lookup(owner);
   if (!saved) throw new Problem(401, 'Register first, or resume using the browser where you registered.');
   const e = saved.entry;
+  if (input.attemptId !== undefined && input.attemptId !== e.attemptId) {
+    throw new Problem(409, 'This browser has switched registrations. Reload to open the current assessment.');
+  }
   if (e.sheetRequestId && !e.sheetRegistered) throw new Problem(409, 'Finish registration before starting your assessment.');
   let changed = false;
   if (action === 'start' && !e.startedAt) {
@@ -112,7 +115,7 @@ export async function attempt(owner: string, action: 'read' | 'start' | 'save' |
     }
   }
   const confirmed = Boolean(e.completedAt && (!e.sheetRequestId || e.sheetDelivered));
-  return { changed, step: e.step, revision: e.revision, started: Boolean(e.startedAt), variant: e.lead.variant,
+  return { changed, attemptId: e.attemptId, step: e.step, revision: e.revision, started: Boolean(e.startedAt), variant: e.lead.variant,
     mode: e.sheetRequestId ? 'webhook' as const : 'local' as const,
     pendingDelivery: Boolean(e.completedAt && !confirmed),
     answers: confirmed ? [] : e.answers, questions: confirmed ? [] : e.assigned.map(({ prompt, choices, subject }) => ({ prompt: displayPrompt(prompt), choices, subject })),
