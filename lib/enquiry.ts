@@ -32,7 +32,7 @@ export function validateContact(input: Input) {
   const errors: Errors = {};
   if (contact.fullName.length < 2 || contact.fullName.length > 100 || !/\p{L}/u.test(contact.fullName)) errors.fullName = 'Enter your full name.';
   if (!contact.phone) errors.phone = 'Enter a valid Indian mobile number or an international number with its country code.';
-  if (contact.email && (contact.email.length > 254 || !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(contact.email))) errors.email = 'Enter a valid email address.';
+  if (!contact.email || contact.email.length > 254 || !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(contact.email)) errors.email = 'Enter a valid email address.';
   return { contact, errors };
 }
 

@@ -28,9 +28,10 @@ export async function boundedJson(request: Request) {
 }
 
 
-export function gate(request: NextRequest) {
+export function gate(request: NextRequest, registration = false) {
   const host = request.headers.get('host') ?? '';
-  if (!/^(?:localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host) || leadConfig(new URL('http://' + host).hostname)?.mode !== 'local')
+  const sheet = registration && Boolean(process.env.DOP_GOOGLE_SHEETS_URL && (process.env.DOP_GOOGLE_SHEETS_TOKEN?.length ?? 0) >= 32);
+  if (!sheet && (!/^(?:localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host) || leadConfig(new URL('http://' + host).hostname)?.mode !== 'local'))
     throw new Problem(503, 'Online assessment registration is awaiting approval. Contact VLS for assistance.');
   const origin = request.headers.get('origin');
   if (request.headers.get('sec-fetch-site') === 'cross-site' || (origin && origin !== request.nextUrl.protocol + '//' + host))

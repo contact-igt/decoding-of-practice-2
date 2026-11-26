@@ -8,7 +8,7 @@ import { objectives, statuses, timelines, validateLead, type Errors } from '../l
 const initial = { fullName: '', phone: '', email: '', status: '', objective: '', timeline: '', consent: false, marketingConsent: false, question: '', website: '' };
 type Field = keyof typeof initial;
 
-export function AdmissionForm({ variant, demo }: { variant: string; demo: boolean }) {
+export function AdmissionForm({ variant, demo, sheetRegistration = false }: { variant: string; demo: boolean; sheetRegistration?: boolean }) {
   const [fields, setFields] = useState(initial);
 
   const [errors, setErrors] = useState<Errors>({});
@@ -60,7 +60,7 @@ export function AdmissionForm({ variant, demo }: { variant: string; demo: boolea
       const response = await fetch('/api/dop-enquiry', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': id },
         body: JSON.stringify({ ...fields, attribution: tracking, variant }),
-        signal: AbortSignal.timeout(10000),
+        signal: AbortSignal.timeout(20000),
       });
       const result = await response.json();
       if (!response.ok || result.accepted !== true) {
@@ -73,7 +73,7 @@ export function AdmissionForm({ variant, demo }: { variant: string; demo: boolea
         track('assessment_registration_success', { variant, mode: result.mode });
         track(result.mode === 'local' ? 'dop_local_test_success' : 'admission_lead_success', { variant });
       }
-      location.assign(route + '/assessment');
+      location.assign(route + (result.next === 'confirmation' ? '/thank-you' : '/assessment'));
     } catch {
       setServerMessage('We could not confirm receipt. Please try again or contact VLS directly.');
     } finally {
@@ -88,7 +88,7 @@ export function AdmissionForm({ variant, demo }: { variant: string; demo: boolea
 
   function contactField(field: 'fullName' | 'phone' | 'email', label: string, type: string, autoComplete: string, maxLength: number) {
     return <div className="field"><label htmlFor={`dop-${field}`}>{label}</label>
-      <input id={`dop-${field}`} type={type} autoComplete={autoComplete} maxLength={maxLength} required={field !== 'email'}
+      <input id={`dop-${field}`} type={type} autoComplete={autoComplete} maxLength={maxLength} required
         value={fields[field]} onChange={event => change(field, event.target.value)} aria-invalid={Boolean(errors[field])} aria-describedby={errors[field] ? `error-${field}` : undefined} />{error(field)}</div>;
   }
 
@@ -103,12 +103,12 @@ export function AdmissionForm({ variant, demo }: { variant: string; demo: boolea
   return <form className="admission-form" noValidate method="post" action="/api/dop-enquiry" onSubmit={submit} onFocusCapture={start} aria-labelledby="form-title">
     <h3 id="form-title">Register for the assessment</h3>
     {demo && <p className="demo-note">Local demonstration · Use fictional details. The questions are test fixtures.</p>}
-    <p>Your progress is saved in this browser for seven days.</p>
+    <p>{sheetRegistration ? 'Register your details. VLS admissions will contact you with assessment next steps.' : 'Your progress is saved in this browser for seven days.'}</p>
     <noscript><p>Enable JavaScript to register. For help, <a href={academy.phoneHref}>call VLS</a>.</p></noscript>
     <fieldset disabled={busy} aria-label="Applicant details">
       {contactField('fullName', 'Full name', 'text', 'name', 100)}
-      {contactField('phone', 'Mobile number with country code', 'tel', 'tel', 32)}
-      {contactField('email', 'Email address (optional)', 'email', 'email', 254)}
+      {contactField('phone', 'Mobile number (with country code)', 'tel', 'tel', 32)}
+      {contactField('email', 'Email address', 'email', 'email', 254)}
 
       {select('status', 'Current professional status', statuses)}
       <details className="optional-info"><summary>Learning preferences (optional)</summary>
@@ -121,7 +121,7 @@ export function AdmissionForm({ variant, demo }: { variant: string; demo: boolea
       </div>
       <div className="field consent-field"><label><input type="checkbox" checked={fields.marketingConsent} onChange={e => change('marketingConsent', e.target.checked)} />Send me optional VLS programme promotions.</label></div>
     </fieldset>
-    <a className="text-link" href={route + '/assessment'}>Resume a saved assessment</a>
+    {!sheetRegistration && <a className="text-link" href={route + '/assessment'}>Resume a saved assessment</a>}
     <div className="form-trap" aria-hidden="true"><label htmlFor="dop-website">Leave this field blank</label><input id="dop-website" name="website" tabIndex={-1} autoComplete="off" value={fields.website} onChange={event => change('website', event.target.value)} /></div>
     {serverMessage && <p className="form-message" role="alert">{serverMessage}</p>}
     <div className="form-actions">

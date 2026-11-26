@@ -395,6 +395,7 @@ details[open] > summary .disclosure::after { transform: none; }
 .closing-copy .section-lead { max-width: 36ch; }
 .closing-actions { padding-top: 24px; border-top: 1px solid var(--dark-line); }
 @media (max-width: 720px) {
+  .mobile-contact-bar { display: grid; }
   .closing .editorial-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .closing-photo img { aspect-ratio: 1.55; }
   .closing-copy { padding: 0; }
