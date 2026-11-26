@@ -73,7 +73,7 @@ export function Assessment({ resultPage = false }: { resultPage?: boolean }) {
         <p>Application reference <strong>{result.reference}</strong></p>
         <a className="button" href={academy.whatsapp} data-track="admission_whatsapp_click">Speak to the Admission Team</a>
         <p>Keep your application reference. Starting a new registration switches this browser to the next applicant.</p>
-        <a className="text-link" href={route + '?new=1#form-title'}>Register another applicant</a>
+        <a className="text-link" href={route + '#form-title'}>Register another applicant</a>
       </> : q && v ? <>
         <div className="exam-progress"><span>Question {v.step + 1} of 9</span><span>{q.subject}</span></div>
         <progress aria-label="Assessment progress" value={v.step + 1} max={9}/>
