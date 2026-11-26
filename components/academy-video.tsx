@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { track } from '../lib/analytics';
 
-type Player = { playVideo(): void; pauseVideo(): void; mute(): void; getCurrentTime(): number; getDuration(): number; destroy(): void; getIframe(): HTMLIFrameElement };
+type Player = { playVideo(): void; pauseVideo(): void; mute(): void; unMute(): void; getCurrentTime(): number; getDuration(): number; destroy(): void; getIframe(): HTMLIFrameElement };
 type PlayerEvent = { target: Player; data: number };
 type API = { Player: new (el: HTMLElement, config: object) => Player };
 declare global { interface Window { YT?: API; onYouTubeIframeAPIReady?: () => void } }
