@@ -10,6 +10,8 @@ export async function saveRegistrationToSheet(requestId: string, lead: Lead) {
     body: JSON.stringify({ requestId, token, lead: {
       fullName: lead.fullName, phone: lead.phone, email: lead.email, status: lead.status,
       consent: lead.consent, marketingConsent: lead.marketingConsent, variant: lead.variant,
+      objective: lead.objective, timeline: lead.timeline, question: lead.question,
+      attribution: lead.attribution,
     } }),
     redirect: 'follow', cache: 'no-store', signal: AbortSignal.timeout(15000),
   });
