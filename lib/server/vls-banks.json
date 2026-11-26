@@ -1,0 +1,610 @@
+{
+  "version": "vls-source-2026-11-26.1",
+  "banks": [
+    {
+      "subject": "Bharatiya Nyaya Sanhita",
+      "title": "BNS Test-1",
+      "source": "https://forms.gle/uDXmfLzNhKAwXEkw7",
+      "questions": [
+        {
+          "id": "bns-396923611",
+          "prompt": "1) Ravi goes to Kumar’s house as a guest. While Kumar is in another room,\nRavi sees Kumar’s gold ring on the table. Ravi dishonestly puts the ring in his\npocket and leaves the house without Kumar’s consent. What offence has Ravi\ncommitted?",
+          "choices": [
+            "a) Extortion",
+            "b) Theft",
+            "c) Criminal intimidation",
+            "d) Mischief"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1447666874",
+          "prompt": "2) Karthik is walking on the road while holding his mobile phone in his hand.\nSuresh suddenly comes on a bike, grabs the mobile phone from Karthik’s\nhand, and quickly escapes. What offence has Suresh committed?",
+          "choices": [
+            "a) Theft",
+            "b) Snatching",
+            "c) Criminal trespass",
+            "d) Defamation"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1165738513",
+          "prompt": "3) Ramesh threatens to publish a false and defamatory statement about Kumar\nunless Kumar gives him ₹50,000. Out of fear, Kumar gives the money to\nRamesh. What offence has Ramesh committed?",
+          "choices": [
+            "a) Theft",
+            "b) Extortion",
+            "c) Robbery",
+            "d) Dacoity"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-639945336",
+          "prompt": "4) Ravi takes Kumar’s mobile phone from his hand. When Kumar tries to stop\nhim, Ravi pushes Kumar down, causes hurt, and runs away with the phone.\nWhat offence has Ravi committed?",
+          "choices": [
+            "a) Theft",
+            "b) Robbery",
+            "c) Extortion",
+            "d) Dacoity"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-875545047",
+          "prompt": "5) Ravi, Suresh, Mohan, Karthik and Bala stop Kumar on a road. They threaten\nhim with knives and forcibly take away his gold chain and mobile phone. What\noffence have they committed?",
+          "choices": [
+            "a) Theft",
+            "b) Extortion",
+            "c) Dacoity",
+            "d) Robbery"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1029137827",
+          "prompt": "6) Arun sees that Kumar accidentally drops his purse containing money on the\nroad. Arun first picks it up thinking that he will return it to Kumar, but later\ndecides to keep the money for himself. What offence has Arun committed?",
+          "choices": [
+            "a) Criminal breach of trust",
+            "b) Dishonest misappropriation of property",
+            "c) Robbery",
+            "d) Criminal intimidation"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1118593008",
+          "prompt": "7) Ravi gives his laptop to Suresh for safe custody while he goes out of\nstation. Suresh promises to return it after one month. Instead, Suresh\ndishonestly sells the laptop and uses the money for himself. What offence has\nSuresh committed?",
+          "choices": [
+            "a) Dishonest misappropriation of property",
+            "b) Criminal breach of trust",
+            "c) Mischief",
+            "d) Criminal Trespass"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-998173677",
+          "prompt": "8) Ravi steals Kumar’s mobile phone and sells it to Suresh for a very low price.\nSuresh knows that the phone was stolen, but still buys it and keeps it. What\noffence has Suresh committed?",
+          "choices": [
+            "a) Dishonest misappropriation of property",
+            "b) Dishonestly receiving or retaining stolen property",
+            "c) Mischief",
+            "d) Defamation"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1757380634",
+          "prompt": "9) Ravi falsely tells Kumar that he is a government officer and asks Kumar to\ngive him a costly mobile phone on credit. Ravi already knows that he has no\nintention to pay for it. What offence has Ravi committed?",
+          "choices": [
+            "a) Theft",
+            "b) Cheating",
+            "c) Criminal trespass",
+            "d) Criminal Misappropriation of property"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-94172965",
+          "prompt": "10) Ravi goes to a bank and falsely introduces himself as Kumar, a rich\nbusinessman. Believing Ravi’s false identity, the bank officer allows him to\nobtain a loan. What offence has Ravi committed?",
+          "choices": [
+            "a) Theft",
+            "b) Cheating by personation",
+            "c) Mischief",
+            "d) Criminal trespass"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1287737045",
+          "prompt": "11) Ravi gets angry with Kumar and intentionally breaks the glass windows of\nKumar’s shop, causing damage to the shop property. What offence has Ravi\ncommitted?",
+          "choices": [
+            "a) Theft",
+            "b) Mischief",
+            "c) Cheating",
+            "d) Criminal breach of trust"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-526603495",
+          "prompt": "12) Ravi enters Kumar’s private agricultural land without permission, intending\nto threaten Kumar and annoy him because of a previous dispute. What offence\nhas Ravi committed?",
+          "choices": [
+            "a) Theft",
+            "b) Criminal trespass",
+            "c) Cheating",
+            "d) Defamation"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-691464883",
+          "prompt": "13) Ravi wants to enter Kumar’s house to commit theft. Instead of using the\nmain door, Ravi makes a hole in the wall of Kumar’s house and puts his hand\ninside to take a gold chain kept near the wall. What offence has Ravi\ncommitted?",
+          "choices": [
+            "a) Simple criminal trespass only",
+            "b) House-breaking",
+            "c) Defamation",
+            "d) Cheating"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1205094125",
+          "prompt": "14) Ravi digs a deep pit on a walking path and covers it with leaves, knowing\nthat a person walking there may fall into it and die. Kumar walks over it, falls\ninto the pit, and dies. What offence has Ravi committed?",
+          "choices": [
+            "a) Culpable homicide",
+            "b) Wrongful restraint",
+            "c) Voluntarily causing hurt",
+            "d) Murder"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-2038321681",
+          "prompt": "15) Ravi points a loaded gun at Kumar and shoots him in the chest with the\nintention of killing him. Kumar dies on the spot. What offence has Ravi\ncommitted?",
+          "choices": [
+            "a) Murder",
+            "b) Voluntarily causing hurt",
+            "c) Wrongful restraint",
+            "d) Culpable Homicide"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-530190879",
+          "prompt": "16) Ravi wants to kill Kumar. He shoots at Kumar, but the bullet misses Kumar\nand hits Suresh, who was standing nearby. Suresh dies. Which provision\napplies to Ravi’s act?",
+          "choices": [
+            "a) Culpable homicide by causing death of person other than intended person",
+            "b) Causing death by negligence",
+            "c) Murder",
+            "d) Wrongful restraint"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-93601234",
+          "prompt": "17) Ravi drives his car at very high speed in a crowded market area without\nproper care. He loses control and hits Kumar, who dies due to the accident.\nRavi had no intention to kill Kumar. What offence has Ravi committed?",
+          "choices": [
+            "a) Murder",
+            "b) Culpable homicide",
+            "c) Causing death by negligence",
+            "d) Voluntarily causing hurt"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1708753860",
+          "prompt": "18) Ravi repeatedly instigates Kumar to end his life and tells him that suicide is\nthe only solution to his problems. Because of Ravi’s instigation, Kumar\ncommits suicide. What offence has Ravi committed?",
+          "choices": [
+            "a) Abetment of suicide",
+            "b) Causing death by negligence",
+            "c) Murder",
+            "d) Wrongful restraint"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-2012210995",
+          "prompt": "19) Ravi slaps Kumar during a quarrel. Kumar suffers bodily pain, but there is\nno fracture or serious injury. What has Ravi caused?",
+          "choices": [
+            "a) Hurt",
+            "b) Murder",
+            "c) Grievous hurt",
+            "d) Wrongful confinement"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-351296984",
+          "prompt": "20) Ravi angrily punches Kumar on his face during a quarrel, intending to\ncause bodily pain. Kumar suffers pain and swelling, but no fracture. What\noffence has Ravi committed?",
+          "choices": [
+            "a) Voluntarily causing hurt",
+            "b) Grievous hurt",
+            "c) Wrongful restraint",
+            "d) Assault"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-425181456",
+          "prompt": "21) Ravi hits Kumar on his face with a stone during a fight. Kumar’s tooth is\nfractured because of the blow. Which category of hurt is caused?",
+          "choices": [
+            "a) Hurt",
+            "b) Grievous hurt",
+            "c) Wrongful restraint",
+            "d) Assault"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1361156271",
+          "prompt": "22) Ravi intentionally hits Kumar’s face with an iron rod, knowing that the blow\nis likely to permanently disfigure Kumar’s face. Kumar suffers permanent\nfacial disfiguration. What offence has Ravi committed?",
+          "choices": [
+            "a) Voluntarily causing grievous hurt",
+            "b) Voluntarily causing hurt",
+            "c) Wrongful restraint",
+            "d) Assault"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-2099016704",
+          "prompt": "23) Ravi blocks a public pathway through which Kumar has a lawful right to\nwalk. Ravi does not believe in good faith that he has any right to block the\npath. Kumar is prevented from going through that path. What offence has Ravi\ncommitted?",
+          "choices": [
+            "a) Wrongful restraint",
+            "b) Wrongful confinement",
+            "c) Criminal force",
+            "d) Assault"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-1864303542",
+          "prompt": "24) Ravi asks Kumar to enter a room and then locks the door from outside.\nKumar is unable to leave the room and cannot move beyond the room’s four\nwalls. What offence has Ravi committed?",
+          "choices": [
+            "a) Wrongful restraint",
+            "b) Wrongful confinement",
+            "c) Assault",
+            "d) Voluntarily causing hurt"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "bns-457041702",
+          "prompt": "25) Ravi intentionally pushes Kumar in a crowded street without Kumar’s\nconsent, intending to annoy and frighten him. What offence has Ravi\ncommitted?",
+          "choices": [
+            "a) Criminal force",
+            "b) Wrongful restraint",
+            "c) Hurt",
+            "d) Kidnapping"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        }
+      ]
+    },
+    {
+      "subject": "Property Law",
+      "title": "Property Law TEST",
+      "source": "https://forms.gle/Z3MkZiWjhpTRAd1Z7",
+      "questions": [
+        {
+          "id": "property-976739477",
+          "prompt": "1. Which section of the Registration Act deals with documents whose registration is compulsory?",
+          "choices": [
+            "Section 17",
+            "Section 18",
+            "Section 23",
+            "Section 49"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-2089630320",
+          "prompt": "2. In accordance with Registration Act 1908, except in the case of wills, a document must ordinarily be presented for registration before the registering officer within:",
+          "choices": [
+            "15 days from execution",
+            "30 days from execution",
+            "4 months from execution",
+            "1 year from execution"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-140695163",
+          "prompt": "3. With regard to Registration Act 1908, A document relating to land should generally be registered in the office where:",
+          "choices": [
+            "The buyer resides",
+            "The seller resides",
+            "The property is situated",
+            "The advocate’s office is situated"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-1913787257",
+          "prompt": "4.  Who can present a document for registration under the Registration Act 1908?",
+          "choices": [
+            "Only the purchaser",
+            "Only the village officer",
+            "The executant, claimant, representative, assign or authorised agent",
+            "Any stranger"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-642316299",
+          "prompt": "5.  A mortgage by deposit of title deeds is commonly known as:",
+          "choices": [
+            "English mortgage",
+            "Usufructuary mortgage",
+            "Equitable mortgage",
+            "Simple gift"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-960801775",
+          "prompt": "6.A lease under the Transfer of Property Act is a transfer of:",
+          "choices": [
+            "Ownership absolutely",
+            "Right to enjoy immovable property for a certain time or in perpetuity",
+            "Right to inherit property",
+            "Criminal liability"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-971483191",
+          "prompt": "7.  The doctrine of lis pendens under Section 52 of the Transfer of Property Act means:",
+          "choices": [
+            "Property involved in a pending suit should not be transferred so as to affect rights in litigation",
+            "Every transfer during suit is always valid against all parties",
+            "Only movable property is affected",
+            "Registration is unnecessary during litigation"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-1366128380",
+          "prompt": "8. The main object of the Tamil Nadu Regulation of Rights and Responsibilities of Landlords and Tenants Act, 2017 is to:",
+          "choices": [
+            "Abolish all private tenancies",
+            "Balance the rights and responsibilities of landlords and tenants",
+            "Transfer all rented properties to Government",
+            "Regulate agricultural land ceiling"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-601326020",
+          "prompt": "9. After commencement of the Tamil Nadu Regulation of Rights and Responsibilities of Landlords and Tenants Act 2017, letting or taking premises on rent should generally be done by:",
+          "choices": [
+            "Oral promise",
+            "Written tenancy agreement",
+            "Mere payment of advance",
+            "Verbal permission from neighbour"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-1393520446",
+          "prompt": "10. According to Tamil Nadu Regulation of Rights and Responsibilities of Landlords and Tenants Act 2017, which authority is connected with registration/information of tenancy agreement?",
+          "choices": [
+            "Rent Authority",
+            "Election Commission",
+            "Labour Court",
+            "Motor Accident Claims Tribunal"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-1559949476",
+          "prompt": "11. The Tamil Nadu Land Reforms (Fixation of Ceiling on Land) Act 1961 was enacted mainly to reduce:",
+          "choices": [
+            "Court fees",
+            "Concentration of agricultural land in the hands of few persons",
+            "Criminal offences",
+            "Income-tax rates"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-49384592",
+          "prompt": "12. According to Tamil Nadu Land Reforms (Fixation of Ceiling on Land) Act 1961, “Ceiling area” means:",
+          "choices": [
+            "Maximum extent of land a person may lawfully hold under the Act",
+            "Roof area of a building",
+            "Area of a rented shop",
+            "Municipal road area"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-286820766",
+          "prompt": "13. According to Tamil Nadu Land Reforms (Fixation of Ceiling on Land) Act 1961 , Land held beyond the ceiling limit is generally called:",
+          "choices": [
+            "Patta land",
+            "Surplus land",
+            "Road land",
+            "House site only"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-843715068",
+          "prompt": "14. Under the Transfer of Property Act, 1882, “transfer of property” mainly means:",
+          "choices": [
+            "Transfer by will after death",
+            "Transfer by a living person to another living person",
+            "Confiscation by Government",
+            "Attachment by Court"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-2045445222",
+          "prompt": "15. Which of the following generally cannot be transferred under the Transfer of Property Act?",
+          "choices": [
+            "House",
+            "Agricultural land",
+            "Mere right to sue",
+            "Leasehold right"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-1143396013",
+          "prompt": "16. A condition in a sale deed saying “the buyer shall never sell the property to anyone” is generally:",
+          "choices": [
+            "Valid absolutely",
+            "Void as a restraint on alienation",
+            "A criminal offence",
+            "A mortgage"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-970086568",
+          "prompt": "17. A mortgage is a transfer of interest in specific immovable property mainly for:",
+          "choices": [
+            "Gift",
+            "Security for payment of debt or performance of obligation",
+            "Adoption",
+            "Partition"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-2007978307",
+          "prompt": "18. With regard to Indian Stamp Act 1899, the process by which an insufficiently stamped document is taken custody of by an authority is called:",
+          "choices": [
+            "Registration",
+            "Mutation",
+            "Impounding",
+            "Execution"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-1476177619",
+          "prompt": "19. A lease under the Transfer of Property Act is a transfer of:",
+          "choices": [
+            "Ownership forever",
+            "Right to enjoy immovable property for a certain time or in perpetuity",
+            "Right to sue only",
+            "Right to inherit property"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        },
+        {
+          "id": "property-1650422781",
+          "prompt": "20. Specific performance means:",
+          "choices": [
+            "Punishing the accused",
+            "Compelling actual performance of a contract",
+            "Cancelling all documents automatically",
+            "Granting divorce"
+          ],
+          "correct": null,
+          "shuffleOptions": false,
+          "review": "awaiting-owner-key"
+        }
+      ]
+    },
+    {
+      "subject": "Family Law",
+      "title": "📘 VLS Law Academy – Bootcamp Assessment",
+      "source": "https://forms.gle/2aNwTv6AXWpV291F8",
+      "questions": []
+    }
+  ]
+}
