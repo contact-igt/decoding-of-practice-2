@@ -45,8 +45,8 @@ export function gate(request: NextRequest, registration = false) {
   if (++record.count > (bucket.endsWith(':register') ? 100 : 1200)) throw new Problem(429, 'Please wait a minute and retry.');
 }
 export const sessionName = 'dop_attempt_session';
-export function owner(request: NextRequest) {
-  const token = request.cookies.get(sessionName)?.value;
+export function owner(request: NextRequest, cookie = sessionName) {
+  const token = request.cookies.get(cookie)?.value;
   if (!token || !/^[a-f0-9]{64}$/.test(token)) throw new Problem(401, 'Register first, or resume in the original browser.');
   return token;
 }

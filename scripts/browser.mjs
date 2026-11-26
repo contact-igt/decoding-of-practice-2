@@ -152,7 +152,9 @@ try {
   const before=await snapshot(); assert.equal(before.questions.length,9);
   assert.equal(before.variant,'B');
   for(const question of before.questions) assert.deepEqual(Object.keys(question).sort(),['choices','prompt','subject']);
-  assert.equal((await context.request.post(api,{data:{revision:before.revision,score:9}})).status(),422);
+  assert.equal((await context.request.post(api,{data:{attemptId:before.attemptId,revision:before.revision,score:9}})).status(),422);
+  assert.equal((await context.request.put(origin + '/api/dop-enquiry?new=1')).status(), 200);
+  assert.deepEqual((await snapshot()).questions, before.questions);
   const foreign=await browser.newContext();
   assert.equal((await foreign.request.get(api)).status(),401);
   await foreign.request.put(origin+'/api/dop-enquiry');
@@ -182,12 +184,38 @@ try {
   assert.deepEqual(Object.keys((await snapshot()).result), ['reference']);
   assert.deepEqual(await errors(page),[]);
   await page.screenshot({path:join(output,'m7-result.png'),fullPage:true});
-  assert.equal((await (await context.request.post(api,{data:{revision:rev,score:0}})).json()).changed,false);
+  assert.equal((await (await context.request.post(api,{data:{attemptId:before.attemptId,revision:rev,score:0}})).json()).changed,false);
   const events=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('qaEvents')));
   assert.equal(events.filter(item=>item.event==='assessment_completed').length,1);
   assert.ok(!JSON.stringify(events).includes(phone));
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
   assert.equal((await context.request.patch(api,{headers:{Origin:'https://example.test'},data:{}})).status(),403);
+  await page.unroute('**/api/dop-enquiry');
+  await page.getByRole('link', { name: 'Register another applicant' }).click();
+  await page.waitForURL('**/decoding-of-practice?new=1#form-title');
+  const originalResult = (await snapshot()).result;
+  assert.ok(originalResult.reference);
+  assert.equal((await context.request.post(origin + '/api/dop-enquiry?new=1', {
+    headers: { 'Idempotency-Key': randomUUID() },
+    data: { fullName: 'Fictional Applicant', phone, email: 'applicant@example.com', status: 'Law graduate', consent: true },
+  })).status(), 409);
+  assert.deepEqual((await snapshot()).result, originalResult);
+  await page.getByLabel('Full name').fill('Second Fictional Applicant');
+  await page.getByLabel('Mobile number').fill('+1203' + phone.slice(-7));
+  await page.getByLabel('Email address').fill('second-applicant@example.com');
+  await page.getByLabel('Current professional status').selectOption('Law graduate');
+  await page.locator('#dop-consent').check();
+  await page.getByRole('button', { name: 'Register & Start Assessment' }).click();
+  await page.waitForURL('**/assessment');
+  await page.getByText('Question 1 of 9').waitFor();
+  const latest = await snapshot();
+  assert.equal(latest.result, null);
+  assert.equal((await context.request.patch(api, {data:{attemptId:before.attemptId, revision:latest.revision, index:0, step:0, choice:0}})).status(),409);
+  await page.goto(route);
+  await page.getByRole('link', { name: 'Resume a saved assessment' }).click();
+  await page.getByText('Question 1 of 9').waitFor();
+  assert.deepEqual((await snapshot()).questions, latest.questions);
+  console.log('PASS same-browser registration for a different applicant, with duplicate mobile protection');
   console.log('PASS registration, retry, attribution, privacy, nine-question navigation, resume, ownership, finalisation and conversions');
   await context.close();
 } finally { await browser.close(); }

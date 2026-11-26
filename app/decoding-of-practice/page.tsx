@@ -41,8 +41,9 @@ const audience = [
   ['Returning legal professionals', 'Rebuild familiarity with everyday workflows and plan a structured return to practice.'],
 ];
 
-export default async function DOP({ searchParams }: { searchParams: Promise<{ variant?: string | string[] }> }) {
-  const { id, headline } = campaign((await searchParams).variant);
+export default async function DOP({ searchParams }: { searchParams: Promise<{ variant?: string | string[]; new?: string | string[] }> }) {
+  const params = await searchParams;
+  const { id, headline } = campaign(params.variant);
   const structured = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -211,7 +212,7 @@ export default async function DOP({ searchParams }: { searchParams: Promise<{ va
             <div className="hero-actions"><a className="button" href="#form-title" data-track="assessment_cta_click" data-placement="investment">Take the Admission Assessment</a>
               <a className="text-link" href={academy.phoneHref} data-track="phone_click">Call for assessment help</a></div>
           </div>
-          <AdmissionForm variant={id} sheetRegistration={Boolean(process.env.DOP_GOOGLE_SHEETS_URL && !sheetAssessmentEnabled())} demo={!process.env.DOP_GOOGLE_SHEETS_URL && process.env.DOP_LOCAL_TEST === '1' && process.env.DOP_ALLOW_INDEXING !== 'true'} />
+          <AdmissionForm variant={id} newRegistration={params.new === '1'} sheetRegistration={Boolean(process.env.DOP_GOOGLE_SHEETS_URL && !sheetAssessmentEnabled())} demo={!process.env.DOP_GOOGLE_SHEETS_URL && process.env.DOP_LOCAL_TEST === '1' && process.env.DOP_ALLOW_INDEXING !== 'true'} />
         </div>
       </section>
 
