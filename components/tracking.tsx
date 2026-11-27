@@ -152,17 +152,17 @@ export function Tracking({ variant, trackPage = true }: { variant: string; track
     };
   }, [trackPage, variant]);
 
-  if (!enabled && !trackPage) return null;
+  if (!enabled) return null;
   function setChoice(granted: boolean) {
     setPreference(granted);
     setSavedConsent(granted);
     if (granted) {
-      if (enabled) enableContainer();
+      enableContainer();
       if (trackPage) enableMetaPixel();
       if (trackPage && !pageTracked) track('page_view', { variant });
       pageTracked = trackPage;
     } else if (document.getElementById('vls-approved-gtm') || document.getElementById(metaScriptId)) {
-      if (enabled) consent(false);
+      consent(false);
       window.fbq?.('consent', 'revoke');
       location.reload();
     }
