@@ -110,7 +110,8 @@ function doPost(e) {
     }
     // Treat user input as text, including phone '+' and spreadsheet formula prefixes.
     const safe = value => typeof value === 'string' && /^[=+@\-\s]/.test(value) ? "'" + value : value;
-    sheet.appendRow([input.requestId, new Date().toISOString()].concat(values.map(safe), [hash], extra.map(safe)));
+    const receivedAt = Utilities.formatDate(new Date(), 'Asia/Kolkata', "yyyy-MM-dd HH:mm:ss 'IST'");
+    sheet.appendRow([input.requestId, receivedAt].concat(values.map(safe), [hash], extra.map(safe)));
     SpreadsheetApp.flush();
     return reply({accepted: true, requestId: input.requestId, duplicate: false});
   } catch (_) {
