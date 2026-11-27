@@ -83,9 +83,10 @@ export function Tracking({ variant, trackPage = true }: { variant: string; track
   const [preference, setPreference] = useState<boolean | null>(null);
   useEffect(() => {
     attribution();
-    const granted = savedConsent();
+    const preference = savedConsent();
+    const granted = preference === 'granted';
     if (enabled && granted) enableContainer();
-    if (trackPage && granted) enableMetaPixel();
+    if (trackPage && (preference === null || granted)) enableMetaPixel();
     if (!pageTracked && trackPage && (!enabled || granted)) {
       track('page_view', { variant });
       pageTracked = true;
@@ -168,7 +169,7 @@ export function Tracking({ variant, trackPage = true }: { variant: string; track
   }
   return <aside className="tracking-preferences" aria-label="Analytics preferences">
     <details><summary>Analytics preferences</summary>
-      <p>Allow optional measurement of programme and campaign activity.</p>
+      <p>The programme page uses Meta Pixel to measure visits. Choose Use Essential Only to turn off optional tracking in this browser.</p>
       <button type="button" className="button" onClick={() => setChoice(true)}>Allow Analytics</button>
       <button type="button" className="text-link" onClick={() => setChoice(false)}>Use Essential Only</button>
       <p role="status">{preference === null ? '' : preference ? 'Analytics allowed.' : 'Essential only.'}</p>
