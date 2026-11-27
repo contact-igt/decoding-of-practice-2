@@ -5,7 +5,50 @@ import { attribution, savedConsent, setSavedConsent, track } from '../lib/analyt
 
 const gtmId = process.env.NEXT_PUBLIC_DOP_GTM_ID ?? '';
 const enabled = /^GTM-[A-Z0-9]{4,12}$/.test(gtmId);
+const metaPixelId = '1320569916265124';
+const metaScriptId = 'vls-meta-pixel';
 let pageTracked = false;
+
+type MetaArgument = string | boolean;
+type MetaPixel = {
+  (...args: MetaArgument[]): void;
+  callMethod?: (...args: MetaArgument[]) => void;
+  push?: MetaPixel;
+  loaded: boolean;
+  version: string;
+  queue: MetaArgument[][];
+};
+
+declare global {
+  interface Window {
+    fbq?: MetaPixel;
+    _fbq?: MetaPixel;
+  }
+}
+
+function enableMetaPixel() {
+  if (document.getElementById(metaScriptId)) return;
+  if (!window.fbq) {
+    const fbq: MetaPixel = Object.assign(
+      (...args: MetaArgument[]) => {
+        if (fbq.callMethod) fbq.callMethod(...args);
+        else fbq.queue.push(args);
+      },
+      { loaded: true, version: '2.0', queue: [] as MetaArgument[][] },
+    );
+    fbq.push = fbq;
+    window.fbq = fbq;
+    window._fbq ||= fbq;
+  }
+  window.fbq('set', 'autoConfig', false, metaPixelId);
+  window.fbq('init', metaPixelId);
+  window.fbq('trackSingle', metaPixelId, 'PageView');
+  const script = document.createElement('script');
+  script.id = metaScriptId;
+  script.async = true;
+  script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+  document.head.append(script);
+}
 
 function consent(granted: boolean, command: 'default' | 'update' = 'update') {
   function pushConsent(...values: [string, string, Record<string, string>]) {
@@ -42,6 +85,7 @@ export function Tracking({ variant, trackPage = true }: { variant: string; track
     attribution();
     const granted = savedConsent();
     if (enabled && granted) enableContainer();
+    if (trackPage && granted) enableMetaPixel();
     if (!pageTracked && trackPage && (!enabled || granted)) {
       track('page_view', { variant });
       pageTracked = true;
@@ -107,16 +151,18 @@ export function Tracking({ variant, trackPage = true }: { variant: string; track
     };
   }, [trackPage, variant]);
 
-  if (!enabled) return null;
+  if (!enabled && !trackPage) return null;
   function setChoice(granted: boolean) {
     setPreference(granted);
     setSavedConsent(granted);
     if (granted) {
-      enableContainer();
+      if (enabled) enableContainer();
+      if (trackPage) enableMetaPixel();
       if (trackPage && !pageTracked) track('page_view', { variant });
       pageTracked = trackPage;
-    } else if (document.getElementById('vls-approved-gtm')) {
-      consent(false);
+    } else if (document.getElementById('vls-approved-gtm') || document.getElementById(metaScriptId)) {
+      if (enabled) consent(false);
+      window.fbq?.('consent', 'revoke');
       location.reload();
     }
   }
