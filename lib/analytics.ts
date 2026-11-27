@@ -34,9 +34,9 @@ export function attribution() {
   }
 }
 
-export function savedConsent(): boolean {
-  try { return localStorage.getItem(consentStorage) === 'granted'; }
-  catch { return false; }
+export function savedConsent(): string | null {
+  try { return localStorage.getItem(consentStorage); }
+  catch { return 'denied'; }
 }
 
 export function setSavedConsent(granted: boolean) {
